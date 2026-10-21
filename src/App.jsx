@@ -1,16 +1,46 @@
+import { useState } from "react";
 import { sculptureList } from "./data/gallery";
 import "./App.css";
 
 const App = () => {
+  const [index, setIndex] = useState(0); //index=0
+  const [show, setShow] = useState(false);
+
+  const nextSculture = () => {
+    if (index + 1 < sculptureList.length) {
+      setIndex(index + 1);
+    }
+  };
+
+  const prevSculture = () => {
+    if (index > 0) {
+      setIndex(index - 1);
+    }
+  };
+
   return (
     <section className="container">
       <div style={{ display: "flex", justifyContent: "center", gap: "10px" }}>
-        <button className="button">{"<<"}</button>
-        <button className="button">{">>"}</button>
+        <button
+          className="button"
+          onClick={prevSculture}
+          disabled={index === 0}
+        >
+          {"<<"}
+        </button>
+        <button
+          className="button"
+          onClick={nextSculture}
+          disabled={index + 1 === sculptureList.length}
+        >
+          {">>"}
+        </button>
       </div>
       <div style={{ marginBottom: "20px" }}>
-        <h1>Homenaje a la Neurocirugía</h1>
-        <span>{"(1 de 12)"}</span>
+        <h1>{sculptureList[index].name}</h1>
+        <span>
+          {index + 1} of {sculptureList.length}
+        </span>
       </div>
       <div>
         <img
@@ -20,15 +50,22 @@ const App = () => {
             objectFit: "cover",
             borderRadius: "10px",
           }}
-          src="https://react.dev/images/docs/scientists/Mx7dA2Y.jpg"
-          alt="A bronze statue of two crossed hands delicately holding a human brain in their fingertips."
+          src={sculptureList[index].url}
+          alt={sculptureList[index].alt}
         />
         <div style={{ marginTop: "15px" }}>
-          <p style={{ textAlign: "justify" }}>
-            Although Colvin is predominantly known for abstract themes that
-            allude to pre-Hispanic symbols, this gigantic sculpture, an homage
-            to neurosurgery, is one of her most recognizable public art pieces.
-          </p>
+          <button
+            className="button"
+            style={{ marginBottom: "10px" }}
+            onClick={() => setShow(!show)}
+          >
+            {show ? "Hide description" : "Show description"}
+          </button>
+          {show && (
+            <p style={{ textAlign: "justify" }}>
+              {sculptureList[index].description}
+            </p>
+          )}
         </div>
       </div>
     </section>
